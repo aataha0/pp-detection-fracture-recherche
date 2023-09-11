@@ -56,7 +56,7 @@ class Builder(tfds.core.GeneratorBasedBuilder):
         for img_path in split_path.glob("../images/*/*.JPG"):
             im = Image.open(img_path)
             resized_image = tf.image.resize_with_pad(im, 225, 225)
-            tf.keras.preprocessing.image.save_img(split_path, resized_image)
+            tf.keras.preprocessing.image.save_img(img_path, resized_image)
 
             bbox = find_bbox(
                 img_path,
