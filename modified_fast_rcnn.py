@@ -113,9 +113,13 @@ def _log_classification_stats(pred_logits, gt_classes, prefix="fast_rcnn"):
     fp = ((gt_classes < 0) & (pred_classes != bg_class_ind)).sum().item()
     fn = ((gt_classes >= 0) & (pred_classes == bg_class_ind)).sum().item()
 
-    precision = tp / (tp + fp)
-    recall = tp / (tp + fn)
-    f1_score = (2 * tp) / (2 * tp + fp + fn)
+    precision = recall = f1_score = 0
+    if tp + fp > 0:
+        precision = tp / (tp + fp)
+    if tp + fn > 0:
+        recall = tp / (tp + fn)
+    if precision + recall > 0:
+        f1_score = (2 * tp) / (2 * tp + fp + fn)
 
     storage = get_event_storage()
     storage.put_scalar(f"{prefix}/cls_accuracy", num_accurate / num_instances)
